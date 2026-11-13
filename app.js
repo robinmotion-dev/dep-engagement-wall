@@ -5,7 +5,10 @@
  *   ?n=8        Anzahl Plaetze (5-10, Standard 8)
  *   ?dauer=40   Sekunden, die eine Kachel steht (min 10, Standard 40); Takt = dauer / n
  *   ?seed=42    feste, reproduzierbare Reihenfolge (ohne seed: Math.random)
- * Test: window.DEP_WALL.status() -> { n, sichtbar, gezeigt, durchlauf }
+ *   ?icons=0    keine animierten Icons zwischen den Projekten
+ * Welche Kachel wechselt, ist zufaellig (unter den laenger stehenden). Statt eines Projekts
+ * erscheint regelmaessig ein animiertes Icon (hoechstens eines gleichzeitig, nie im grossen Platz).
+ * Test: window.DEP_WALL.status() -> { n, sichtbar, icon, gezeigt, durchlauf }
  */
 (function () {
   'use strict';
@@ -16,6 +19,12 @@
   var N = Math.max(5, Math.min(10, Math.round(zahl('n', 8))));
   var DAUER = Math.max(10, zahl('dauer', 40));
   var SEED = (Q.get('seed') !== null && isFinite(Number(Q.get('seed')))) ? (Number(Q.get('seed')) | 0) : null;
+  var MIT_ICONS = Q.get('icons') !== '0';
+
+  // Animierte Icons (Strichzeichnungen, schwarz, transparent) – Quelle: 01_IN/02_Footage/01_Bilder-Video/animated-icons
+  var ICONS = ['gluehbirne', 'gruppe', 'haende-herz'].map(function (n) { return 'assets/icons/' + n + '.webp'; });
+  var ICON_FARBEN = ['gelb', 'gelb', 'pink', 'weiss'];   // nur helle Gruende, Linien sind schwarz
+  var ICON_ABSTAND = Math.ceil(N / 2);                     // so viele Projektwechsel zwischen zwei Icons
 
   // ---------- Zufall ----------
   function mulberry32(a) {
@@ -75,11 +84,13 @@
     var sat = document.createElement('div'); sat.className = 'satz';
     inh.appendChild(org); inh.appendChild(tit); inh.appendChild(sat);
     k.appendChild(inh);
+    var bild = document.createElement('img'); bild.className = 'bild'; bild.alt = '';
+    k.appendChild(bild);
     el.appendChild(k);
     buehne.appendChild(el);
     return {
-      i: i, el: el, k: k, inh: inh, org: org, tit: tit, sat: sat,
-      farbe: null, proj: null, stamp: -1, nachbarn: [], t: null
+      i: i, el: el, k: k, inh: inh, org: org, tit: tit, sat: sat, bild: bild,
+      farbe: null, proj: null, icon: null, stamp: -1, nachbarn: [], t: null
     };
   }
   for (var i = 0; i < N; i++) plaetze.push(platzBauen(i));
@@ -140,8 +151,8 @@
   }
 
   // ---------- Kachel befuellen ----------
-  function farbeWaehlen(p) {
-    var frei = FARBEN.filter(function (c) { return c !== p.farbe; });
+  function farbeWaehlen(p, liste) {
+    var frei = (liste || FARBEN).filter(function (c) { return c !== p.farbe; });
     var belegt = {};
     p.nachbarn.forEach(function (n) { if (plaetze[n].farbe && plaetze[n].farbe !== 'weiss') belegt[plaetze[n].farbe] = true; });
     var besser = frei.filter(function (c) { return !belegt[c]; });
@@ -149,7 +160,7 @@
     return wahl[Math.floor(rnd() * wahl.length)];
   }
   function klassen(p, zustand) {
-    p.k.className = 'kachel ' + p.farbe + ' ' + zustand;
+    p.k.className = 'kachel ' + p.farbe + (p.icon ? ' icon' : '') + ' ' + zustand;
   }
   // Skalierung schrittweise verkleinern, bis nichts mehr ueberlaeuft
   function anpassen(p) {
@@ -162,6 +173,7 @@
   }
   function befuellen(p, proj) {
     if (p.proj) delete aktiv[p.proj.id];
+    p.icon = null;
     p.proj = proj; aktiv[proj.id] = true;
     p.org.textContent = proj.org || '';
     p.tit.textContent = proj.titel;
@@ -176,16 +188,50 @@
     clearTimeout(p.t);
     p.t = setTimeout(function () { klassen(p, 'steht'); }, 1420);
   }
-  function tauschen(p) {
-    var neu = naechstes();
-    aktiv[neu.id] = true;           // reservieren, bis die Kachel gewechselt hat
+  // Icons: gemischte Reihenfolge, keines zweimal hintereinander
+  var iconBeutel = [], iconLetztes = null;
+  function naechstesIcon() {
+    if (!iconBeutel.length) {
+      iconBeutel = ICONS.slice();
+      for (var j = iconBeutel.length - 1; j > 0; j--) {
+        var r = Math.floor(rnd() * (j + 1)), t = iconBeutel[j]; iconBeutel[j] = iconBeutel[r]; iconBeutel[r] = t;
+      }
+      if (iconBeutel.length > 1 && iconBeutel[0] === iconLetztes) iconBeutel.push(iconBeutel.shift());
+    }
+    iconLetztes = iconBeutel.shift();
+    return iconLetztes;
+  }
+  function iconSetzen(p, src) {
+    if (p.proj) delete aktiv[p.proj.id];
+    p.proj = null; p.icon = src;
+    p.bild.src = src;
+    p.farbe = farbeWaehlen(p, ICON_FARBEN);
+    klassen(p, '');
+  }
+  // Vorladen, damit das Icon nicht erst beim Einblenden geladen wird
+  if (MIT_ICONS) ICONS.forEach(function (s) { var im = new Image(); im.src = s; });
+
+  function tauschen(p, alsIcon) {
+    var neu = alsIcon ? null : naechstes();
+    var icon = alsIcon ? naechstesIcon() : null;
+    if (neu) aktiv[neu.id] = true;  // reservieren, bis die Kachel gewechselt hat
     klassen(p, 'raus');
     clearTimeout(p.t);
     p.t = setTimeout(function () {
-      befuellen(p, neu);
+      if (icon) iconSetzen(p, icon); else befuellen(p, neu);
       hineinFahren(p);
     }, 1120);
   }
+
+  // Welche Kachel geht: zufaellig unter der aelteren Haelfte; wer zu lange steht, ist sofort dran
+  function opferWaehlen() {
+    var sortiert = plaetze.slice().sort(function (a, b) { return a.stamp - b.stamp; });
+    var aeltester = sortiert[0];
+    if (stampZaehler - aeltester.stamp >= Math.round(N * 1.5)) return aeltester;
+    var kandidaten = sortiert.slice(0, Math.max(2, Math.ceil(N / 2)));
+    return kandidaten[Math.floor(rnd() * kandidaten.length)];
+  }
+  var seitIcon = 0;   // Projektwechsel seit dem letzten Icon
 
   // ---------- Scheduler (eine setTimeout-Kette) ----------
   var timer = null, naechsterZeitpunkt = 0, startIdx = 0, letzterTausch = Date.now(), stampZaehler = 0;
@@ -202,11 +248,13 @@
       hineinFahren(p);
       naechsterZeitpunkt = jetzt + (startIdx < N ? 350 : takt());
     } else {
-      var aeltester = plaetze[0];
-      plaetze.forEach(function (q) { if (q.stamp < aeltester.stamp) aeltester = q; });
-      aeltester.stamp = stampZaehler++;
-      gezeigt++;
-      tauschen(aeltester);
+      var opfer = opferWaehlen();
+      opfer.stamp = stampZaehler++;
+      var iconSichtbar = plaetze.some(function (q) { return q.icon; });
+      // Icon nur in kleinen Plaetzen (nicht im grossen Platz a), nie zwei gleichzeitig
+      var alsIcon = MIT_ICONS && ICONS.length && !iconSichtbar && opfer.i !== 0 && seitIcon >= ICON_ABSTAND;
+      if (alsIcon) seitIcon = 0; else { seitIcon++; gezeigt++; }
+      tauschen(opfer, alsIcon);
       naechsterZeitpunkt += takt();
     }
     planen();
@@ -241,7 +289,7 @@
     clearTimeout(resizeT);
     resizeT = setTimeout(function () {
       vorlageAnwenden();
-      plaetze.forEach(function (p) { if (p.proj) anpassen(p); });
+      plaetze.forEach(function (p) { if (p.proj && !p.icon) anpassen(p); });
     }, 150);
   });
 
@@ -251,6 +299,7 @@
       return {
         n: N,
         sichtbar: plaetze.filter(function (p) { return p.proj; }).map(function (p) { return p.proj.id; }),
+        icon: plaetze.filter(function (p) { return p.icon; }).map(function (p) { return { platz: p.i, src: p.icon }; }),
         gezeigt: gezeigt,
         durchlauf: durchlauf
       };
