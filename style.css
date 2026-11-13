@@ -52,7 +52,7 @@ html, body {
   padding: 0 calc(var(--abstand) + 1vmin);
   background: var(--weiss);
 }
-.kopf .zeile { font-weight: 900; font-size: 3.6vh; line-height: 1.1; letter-spacing: -.005em; }
+.kopf .zeile { font-weight: 400; font-size: 3.6vh; line-height: 1.1; letter-spacing: -.005em; }
 /* Die Logodatei enthaelt den Schutzraum bereits (Rand = Hoehe der Wortmarke); die Marke selbst ist ca. 43 % der Bildhoehe.
    Negativer Rand, damit dieser eingebaute Leerraum buendig mit dem Buehnenrand abschliesst. */
 .kopf .logo { height: 17vh; width: auto; display: block; margin: 0 -4.4vh 0 0; }
