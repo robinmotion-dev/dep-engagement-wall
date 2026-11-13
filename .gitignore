@@ -1,0 +1,8 @@
+# Nur die lauffaehige App wird veroeffentlicht.
+# Rohdaten (Volltexte der Website), Arbeitsdateien und internes Konzept bleiben lokal.
+KONZEPT.md
+tools/
+data/projekte_roh.json
+data/pruefliste.csv
+data/batches/
+__pycache__/
