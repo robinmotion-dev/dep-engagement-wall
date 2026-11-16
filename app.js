@@ -51,12 +51,12 @@
   // ---------- Rastervorlagen ----------
   // Jede Zeichenkette = eine Rasterzeile, jeder Buchstabe = eine Zelle, gleiche Buchstaben = ein Platz.
   var V = {
-    5:  { quer: ['aabc', 'aade'], hoch: ['aa', 'aa', 'bc', 'de'], mittel: ['aab', 'aac', 'dec'], ultra: ['aabcd', 'aaeed'] },
+    5:  { quer: ['aab', 'cde'], hoch: ['aa', 'aa', 'bc', 'de'], mittel: ['aab', 'aac', 'dec'], ultra: ['aabcd', 'aaeed'] },
     6:  { quer: ['aabc', 'defc'], hoch: ['aa', 'bc', 'de', 'ff'], mittel: ['aab', 'aac', 'def'], ultra: ['aabcee', 'aaddff'] },
-    7:  { quer: ['aabc', 'aadc', 'efgg'], hoch: ['aa', 'bc', 'de', 'fg'], mittel: ['aab', 'aac', 'def', 'ggf'], ultra: ['aabcde', 'aaffge'] },
-    8:  { quer: ['aabc', 'aade', 'fghe'], hoch: ['aa', 'bc', 'de', 'fg', 'hh'], mittel: ['abc', 'dec', 'fgh'], ultra: ['aabcdee', 'aafgdhh'] },
-    9:  { quer: ['aabc', 'aade', 'fghi'], hoch: ['aa', 'bc', 'de', 'fg', 'hi'], mittel: ['abc', 'def', 'ghi'], ultra: ['aabcdeff', 'aaghdeii'] },
-    10: { quer: ['aabcd', 'aaefd', 'ghiij'], hoch: ['aa', 'bc', 'de', 'fg', 'hi', 'jj'], mittel: ['aabc', 'debf', 'ghij'], ultra: ['aabcdef', 'aaghijf'] }
+    7:  { quer: ['aabc', 'ddec', 'fggc'], hoch: ['aa', 'bc', 'de', 'fg'], mittel: ['aab', 'aac', 'def', 'ggf'], ultra: ['aabcde', 'aaffge'] },
+    8:  { quer: ['aabc', 'deec', 'fghh'], hoch: ['aa', 'bc', 'de', 'fg', 'hh'], mittel: ['abc', 'dec', 'fgh'], ultra: ['aabcdee', 'aafgdhh'] },
+    9:  { quer: ['aabc', 'defg', 'hiig'], hoch: ['aa', 'bc', 'de', 'fg', 'hi'], mittel: ['abc', 'def', 'ghi'], ultra: ['aabcdeff', 'aaghdeii'] },
+    10: { quer: ['aabcd', 'efghd', 'iijjd'], hoch: ['aa', 'bc', 'de', 'fg', 'hi', 'jj'], mittel: ['aabc', 'debf', 'ghij'], ultra: ['aabcdef', 'aaghijf'] }
   };
 
   function formatWahl() {
