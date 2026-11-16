@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engagement-Wall hochkant</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="hochkant.css">
+</head>
+<body>
+
+<!-- Dreiecksformen (Pfade aus assets/dreieck-*.svg), Farbe per CSS (currentColor) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="t-gelb" viewBox="0 0 147.32 202.67"><path fill="currentColor" d="M125.07,75.39C117.07,68.76 69.65,27.47 67.83,25.94C59.65,19.07 52.15,12.76 46.19,8.46C42.00,5.42 36.13,0.81 31.18,0.20C27.61,-0.25 24.68,0.03 22.16,1.40C19.52,2.91 16.43,6.01 14.41,9.90C3.40,31.15 -0.25,65.53 0.01,97.56C0.07,104.35 0.28,112.36 0.66,120.79C1.11,131.02 1.85,141.86 2.91,151.91C4.44,166.50 5.85,177.18 8.88,186.64C14.81,205.13 23.45,208.51 46.14,192.09C59.05,182.76 121.06,134.84 131.80,125.96C155.42,106.43 151.19,97.08 125.07,75.39Z"/></symbol>
+    <symbol id="t-pink" viewBox="0 0 194.20 212.26"><path fill="currentColor" d="M166.91,193.38C158.42,194.96 134.91,198.58 109.34,202.24C105.51,202.78 45.82,210.88 32.62,212.01C6.60,214.23 -5.43,201.39 2.33,177.82C8.87,157.96 23.20,121.90 38.80,95.05C38.80,95.04 38.80,95.04 38.80,95.04C47.37,78.35 69.75,43.32 88.01,20.07C112.17,-10.67 131.79,-3.29 144.14,23.27C150.61,37.19 158.91,56.36 168.18,82.57C168.58,83.73 174.20,100.18 176.51,107.38C184.90,133.54 191.97,158.63 191.97,158.63C197.42,182.20 194.28,188.30 166.91,193.38Z"/></symbol>
+  </defs>
+</svg>
+
+<!-- Die Wand: immer 9:16 (Zielformat 1080 x 1920), mittig im Fenster -->
+<div id="wand">
+
+  <!-- Gestaltungselement: zwei grosse Dreiecke (Pink, Gelb), angeschnitten, sehr langsame Drift -->
+  <div class="hintergrund" aria-hidden="true">
+    <div class="bg f-pink c-pink" style="left:-40%;bottom:-31%;width:145%;--dx:4%;--dy:-2%;--r0:4deg;--r1:-4deg;--dur:130s"><svg><use href="#t-pink"/></svg></div>
+    <div class="bg f-gelb c-gelb" style="right:-42%;bottom:-18%;width:110%;--dx:-4%;--dy:2%;--r0:-5deg;--r1:5deg;--dur:95s"><svg><use href="#t-gelb"/></svg></div>
+  </div>
+
+  <!-- Kopfzeile: Text links (frei aenderbar oder loeschbar), Logo rechts in Originalform -->
+  <header class="kopf">
+    <div class="zeile">Nominiert für den Deutschen Engagementpreis 2026</div>
+    <img class="logo" src="assets/dep-logo.svg" alt="Deutscher Engagementpreis">
+  </header>
+
+  <!-- Buehne: Plaetze werden von hochkant.js angelegt -->
+  <main id="buehne"></main>
+
+</div>
+
+<script src="data/projekte.js"></script>
+<script src="hochkant.js"></script>
+</body>
+</html>

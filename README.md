@@ -8,6 +8,10 @@ Web-App für eine Videoinstallation: zeigt in Dauerschleife und zufälliger Reih
 
 Im Browser öffnen und mit F11 in den Vollbildmodus schalten. Gedacht für 16:9, Full HD.
 
+## Variante hochkant (9:16)
+
+`hochkant.html` (bzw. `start-hochkant.bat`) für einen hochkant gedrehten Bildschirm, 1080 × 1920. Zwei Spalten, nur zwei Kachelgrößen (groß über die volle Breite, klein halbe Breite), kleine Schrift etwas größer als in der Querversion. Parameter wie unten.
+
 ## Parameter
 
 An die Adresse anhängen, z. B. `?n=6&dauer=60`:
