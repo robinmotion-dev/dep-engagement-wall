@@ -94,7 +94,7 @@ html, body {
 /* ---------- Kachel ---------- */
 .kachel {
   position: absolute; inset: 0;
-  border-radius: calc(var(--e) * 2.6);
+  border-radius: calc(var(--e) * 1.75);
   overflow: hidden;
   opacity: 0;
   transform: translateY(calc(var(--e) * 1.2)) scale(.97);

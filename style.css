@@ -79,7 +79,7 @@ html, body {
 /* ---------- Kachel ---------- */
 .kachel {
   position: absolute; inset: 0;
-  border-radius: 2.6vmin;
+  border-radius: 1.75vmin;
   overflow: hidden;
   opacity: 0;
   transform: translateY(1.2vmin) scale(.97);
