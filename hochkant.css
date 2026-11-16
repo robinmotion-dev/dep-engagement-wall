@@ -12,6 +12,9 @@
   --rot: #e00000;
   --schwarz: #000000;
   --weiss: #ffffff;
+  --creme: #f8edde;     /* Hintergrundverlauf (Vorgabe Robin, 16.11.2026) */
+  --pfirsich: #fee7d7;
+  --rosa: #f7dee5;
   --schrift: "Lato", "Segoe UI", Arial, sans-serif;
   --e: 10.8px;                        /* 1 % der Wandbreite; wird von hochkant.js gesetzt */
   --kopf: calc(var(--e) * 15);        /* Hoehe der Kopfzeile mit Logo */
@@ -39,7 +42,11 @@ html, body {
 }
 
 /* ---------- Gestaltungselement: grosse Dreiecke, angeschnitten (Styleguide S. 9, Einsatz B) ---------- */
-.hintergrund { position: absolute; inset: 0; overflow: hidden; z-index: 0; background: var(--weiss); }
+/* Grund: Verlauf aus den drei Pastelltoenen (oben Creme, Mitte Pfirsich, unten Rosa) statt Weiss */
+.hintergrund {
+  position: absolute; inset: 0; overflow: hidden; z-index: 0;
+  background: linear-gradient(180deg, var(--creme) 0%, var(--pfirsich) 50%, var(--rosa) 100%);
+}
 .bg {
   position: absolute;
   animation: drift var(--dur) ease-in-out infinite alternate;
@@ -62,7 +69,7 @@ html, body {
   position: absolute; left: 0; right: 0; top: 0; height: var(--kopf); z-index: 2;
   display: flex; align-items: center; justify-content: space-between; gap: calc(var(--e) * 3);
   padding: 0 calc(var(--abstand) + var(--e));
-  background: var(--weiss);
+  background: transparent;   /* Verlauf laeuft unter der Kopfzeile durch */
 }
 .kopf .zeile { font-weight: 900; font-size: calc(var(--e) * 3.9); line-height: 1.1; letter-spacing: -.005em; }
 /* Die Logodatei enthaelt den Schutzraum bereits (Rand = Hoehe der Wortmarke); die Marke selbst ist ca. 43 % der Bildhoehe.
