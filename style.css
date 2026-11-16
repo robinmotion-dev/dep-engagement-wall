@@ -11,6 +11,8 @@
   --rot: #e00000;
   --schwarz: #000000;
   --weiss: #ffffff;
+  /* Hintergrundverlauf aus den drei hellen Toenen (Vorgabe Robin 2026-11-16) */
+  --verlauf: linear-gradient(120deg, #f7dee5 0%, #fee7d7 52%, #f8edde 100%);
   --schrift: "Lato", "Segoe UI", Arial, sans-serif;
   --kopf: 14vh;       /* Hoehe der Kopfzeile mit Logo */
   --abstand: 3vmin;   /* Aussenabstand der Buehne */
@@ -20,14 +22,14 @@
 html, body {
   margin: 0; padding: 0; width: 100vw; height: 100vh;
   overflow: hidden; cursor: none;
-  background: var(--weiss);
+  background: #fee7d7;
   color: var(--schwarz);
   font-family: var(--schrift);
 }
 * { cursor: none; box-sizing: border-box; }
 
 /* ---------- Gestaltungselement: grosse Dreiecke, angeschnitten (Styleguide S. 9, Einsatz B) ---------- */
-.hintergrund { position: fixed; inset: 0; overflow: hidden; z-index: 0; background: var(--weiss); }
+.hintergrund { position: fixed; inset: 0; overflow: hidden; z-index: 0; background: var(--verlauf); }
 .bg {
   position: absolute;
   animation: drift var(--dur) ease-in-out infinite alternate;
@@ -50,7 +52,9 @@ html, body {
   position: fixed; left: 0; right: 0; top: 0; height: var(--kopf); z-index: 2;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 calc(var(--abstand) + 1vmin);
-  background: var(--weiss);
+  /* deckt die Dreiecke ab, zeigt aber denselben Verlauf (fest zum Fenster, daher nahtlos) */
+  background: var(--verlauf) fixed;
+  background-size: 100vw 100vh;
 }
 .kopf .zeile { font-weight: 900; font-size: 3.6vh; line-height: 1.1; letter-spacing: -.005em; }
 /* Die Logodatei enthaelt den Schutzraum bereits (Rand = Hoehe der Wortmarke); die Marke selbst ist ca. 43 % der Bildhoehe.
